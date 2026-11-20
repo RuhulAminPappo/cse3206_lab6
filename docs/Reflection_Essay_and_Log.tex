@@ -1,0 +1,43 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+\title{\textbf{CSE 3206: CO4 Learning Log \& Reflection Essay}\\
+Self-Directed Learning: Automated CI Pipelines with GitHub Actions}
+\author{Department of Computer Science \& Engineering, RUET}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Part A: Self-Directed Learning Log}
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{p{2.2cm}p{4.2cm}p{4.2cm}p{3.6cm}}
+\toprule
+\textbf{Session} & \textbf{Learning Objective} & \textbf{Resource Consulted} & \textbf{Outcome / Artifact} \\
+\midrule
+Session 1 & Understand CI triggers, runners, and YAML workflow syntax. & GitHub Actions Official Docs (\textit{Building and testing Python}). & Drafted initial workflow structure for push and PR events. \\
+Session 2 & Configure matrix testing across Python 3.10--3.12 and \texttt{pytest-cov}. & Pytest-cov documentation \& GitHub \texttt{setup-python@v5} README. & Added \texttt{--cov-fail-under=85} quality gate in \texttt{.github/workflows/ci.yml}. \\
+Session 3 & Enforce PR status checks and debug module import path issues in CI. & GitHub Branch Protection docs \& \texttt{pyproject.toml} packaging guide. & Configured \texttt{pythonpath = ["src"]} so CI runners discover packages cleanly. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{Part B: Reflection Essay (Approx. 580 Words)}
+
+Developing the \textit{Campus Lost \& Found with Smart Matching} application required translating theoretical software engineering principles into a cohesive, maintainable codebase. Rather than treating requirements, design patterns, testing, and version control as isolated lab exercises, this project demonstrated how architectural decisions in one phase directly govern agility in later phases.
+
+My most consequential technical decision was separating pure domain logic and behavioral design patterns from SQLite persistence and notification delivery. By introducing abstract repository interfaces alongside a \texttt{NotificationSender} boundary, the core matching and claim-verification workflows remained free of external side effects. Applying the Strategy pattern allowed keyword, category, and date-proximity scoring rules to evolve independently, while the Chain of Responsibility cleanly replaced nested conditional logic with discrete verification handlers. Similarly, publishing domain events through an \texttt{EventBus} meant that adding notification observers required zero modifications to \texttt{MatchingService} or \texttt{ClaimService}.
+
+For the self-directed learning component (CO4), I selected \textbf{GitHub Actions} to automate continuous integration across pull requests. Compared to Jenkins, which requires provisioning and maintaining a separate build server, GitHub Actions integrates natively with repository pull requests via declarative YAML files inside \texttt{.github/workflows/ci.yml}. Configuring a Python version matrix (3.10, 3.11, and 3.12) alongside \texttt{pytest --cov-fail-under=85} transformed our unit tests from a manual local habit into an automated quality gate that blocks regressions before code merges into \texttt{main}.
+
+Several practical challenges emerged during implementation. First, early test runs in CI failed with \texttt{ModuleNotFoundError} because the local VS Code environment resolved \texttt{src/} implicitly whereas clean Linux runners did not; configuring \texttt{pythonpath = ["src"]} inside \texttt{pyproject.toml} resolved the discrepancy across both environments. Second, designing meaningful unit tests for the \texttt{Observer} notification flow initially risked coupling tests to console output. Replacing the concrete sender with \texttt{unittest.mock.MagicMock(spec=NotificationSender)} enabled precise assertions on recipient emails, message subjects, and invocation counts. Finally, intentionally simulating a merge conflict on the matching threshold constant reinforced how small configuration changes across parallel feature branches require careful semantic verification—not just syntactic conflict resolution—followed by a full test run.
+
+Evaluating my learning resources, the official GitHub Actions Python documentation and \texttt{pytest} mocking guides proved far more reliable than fragmented blog snippets, which frequently referenced deprecated action versions or outdated \texttt{setup.py} layouts. Official documentation clarified exact runner behavior and exit-code conventions used to fail builds when coverage drops below threshold.
+
+Building on lessons from this project, my next realistic skill goal is learning \textbf{Docker and containerized integration testing} (such as Testcontainers with PostgreSQL). While SQLite and mocked notification boundaries provided rapid feedback here, production campus systems rely on networked databases and background workers. Containerizing the application and running multi-service integration tests inside GitHub Actions will bridge the gap between isolated unit testing and production deployment readiness.
+
+\end{document}

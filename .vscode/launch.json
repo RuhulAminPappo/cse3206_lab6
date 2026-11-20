@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Lost & Found Demo",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "lost_found.cli",
+      "args": ["--demo"],
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      },
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Run Lost & Found Interactive CLI",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "lost_found.cli",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      },
+      "console": "integratedTerminal"
+    }
+  ]
+}
