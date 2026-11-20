@@ -73,7 +73,7 @@ class DateProximityMatchStrategy(MatchingStrategy):
 
 
 class CompositeWeightedStrategy(MatchingStrategy):
-    """Combines multiple strategies using normalized weights."""
+    """Combines multiple strategies using normalized weights so scores remain in [0.0, 1.0]."""
 
     def __init__(self, weighted_strategies: List[Tuple[MatchingStrategy, float]]) -> None:
         if not weighted_strategies:
