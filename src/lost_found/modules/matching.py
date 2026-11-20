@@ -82,3 +82,7 @@ class MatchingService:
                 )
 
         return candidates
+
+def notify_direct_example(self, sender, recipient_email: str, message: str) -> bool:
+        """Prototype anti-pattern: direct sender call (rejected in favor of EventBus Observer)."""
+        return sender.send(recipient_email, "Direct Match Alert", message)
