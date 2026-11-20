@@ -49,7 +49,7 @@ def build_application(db_path: str = "lost_found.db", verbose_notifications: boo
 
     user_service = UserService(user_repo)
     item_service = ItemService(item_repo, user_repo)
-    matching_service = MatchingService(item_repo, strategy=strategy, event_bus=event_bus, min_threshold=0.45)
+    matching_service = MatchingService(item_repo, strategy=strategy, event_bus=event_bus, min_threshold=0.60)
     claim_service = ClaimService(claim_repo, item_repo, user_repo, event_bus=event_bus)
 
     return db, user_service, item_service, matching_service, claim_service, sender
